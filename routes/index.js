@@ -16,6 +16,8 @@ router.delete('/delete-member/:user_id', memberController.deleteMember);
 const createLogs = require('../models/logsModel');
 router.post('/create-logs', createLogs.createLogs);
 
+//sırf deneme yorumu
+
 
 
 module.exports = router;
