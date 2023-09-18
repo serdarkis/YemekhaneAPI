@@ -17,17 +17,25 @@ const logsModel = require('../models/logsModel.js');
  */
 
 const logsController = {
-    async createLogs(req, res) {
-        console.log(req.body);
-        const {log_id, location, time,log_type} = req.body;
-
+    createLog: async (req, res) => {
         try {
-            const newLogs = await logsModel.addLogs(log_id, location, time,log_type);
-            res.json(newLogs);
+          // Yeni üye bilgilerini al
+          const { firstName, lastName, balance } = req.body;
+          
+          const newMember = await logsModel.Logs.create({
+            firstName,
+            lastName,
+            balance,
+          });
+          // Üye başarıyla oluşturulduğunda bir yanıt gönder
+          res.status(201).json(newMember);
         } catch (error) {
-            res.status(500).json({ error: 'An error occurred' });
+          // Hata durumunda bir hata yanıtı gönder
+          console.error(error);
+          res.status(500).json({ error: 'Üye oluşturulamadı' });
         }
-    },
+        
+      },
 };
 
 module.exports = logsController;

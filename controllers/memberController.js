@@ -1,5 +1,5 @@
 const { Member } = require('../models/memberModel.js');
-
+const { Logs } = require('../models/logsModel.js');
 
 const memberController = {
   /**
@@ -10,7 +10,6 @@ const memberController = {
        */
   createMember: async (req, res) => {
     try {
-      // Yeni üye bilgilerini al
       const { firstName, lastName, balance } = req.body;
       
       const newMember = await Member.create({
@@ -18,14 +17,19 @@ const memberController = {
         lastName,
         balance,
       });
-      // Üye başarıyla oluşturulduğunda bir yanıt gönder
+
+      // Logs tablosuna ekleme işlemi
+      await Logs.create({
+        user_id: newMember.user_id,
+        log_type: 'CREATE',
+        balance_changed: `${balance}`,
+      });
+
       res.status(201).json(newMember);
     } catch (error) {
-      // Hata durumunda bir hata yanıtı gönder
       console.error(error);
       res.status(500).json({ error: 'Üye oluşturulamadı' });
     }
-    
   },
 
   readMember: async (req, res) => {
@@ -49,18 +53,22 @@ const memberController = {
 
   updateMember: async (req, res) => {
     try {
-      const memberId = req.params.user_id; // Güncellenecek üyenin kimliği
-
-      // Güncellenecek bilgileri al
+      const memberId = req.params.user_id;
       const { firstName, lastName, balance } = req.body;
 
-      // Member modeli kullanarak ilgili üyeyi güncelle
-      const updatedMember = await Member.update(
+      const [updatedCount] = await Member.update(
         { firstName, lastName, balance },
         { where: { user_id: memberId } }
       );
 
-      if (updatedMember[0]) {
+      if (updatedCount > 0) {
+        // Logs tablosuna güncelleme işlemi
+        await Logs.create({
+          user_id: memberId,
+          log_type: 'UPDATE',
+          balance_changed: `${balance}`,
+        });
+
         res.status(200).json({ message: 'Üye güncellendi' });
       } else {
         res.status(404).json({ error: 'Üye bulunamadı' });
@@ -73,12 +81,18 @@ const memberController = {
 
   deleteMember: async (req, res) => {
     try {
-      const memberId = req.params.user_id; // Silinecek üyenin kimliği
+      const memberId = req.params.user_id;
 
-      // Member modeli kullanarak ilgili üyeyi sil
-      const deletedMemberCount = await Member.destroy({ where: { user_id: memberId } });
+      const deletedCount = await Member.destroy({ where: { user_id: memberId } });
 
-      if (deletedMemberCount) {
+      if (deletedCount > 0) {
+        // Logs tablosuna silme işlemi
+        await Logs.create({
+          user_id: memberId,
+          log_type: 'DELETE',
+          balance_changed: 'Deleted',
+        });
+
         res.status(200).json({ message: 'Üye silindi' });
       } else {
         res.status(404).json({ error: 'Üye bulunamadı' });

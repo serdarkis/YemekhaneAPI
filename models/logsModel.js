@@ -2,15 +2,12 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
 /**
- * aşağıdaki terimler javascript de ne demek 
- * ' '
- * " "
- * $
- * {}
- * []
- * /
- * \
- * =>
+ * log_id
+ * user_id
+ * log_type
+ * balance_changed
+ * memberModelde yapılan değişimleri kaydeden model bu.
+ * 
  */
 
 const Logs = sequelize.define('logs', {
@@ -28,7 +25,7 @@ const Logs = sequelize.define('logs', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  location: {
+  balance_changed: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -36,26 +33,5 @@ const Logs = sequelize.define('logs', {
 
 sequelize.sync();
 
-const createLogs = async (req, res) => {
-  try {
-    // Yeni üye bilgilerini al
-    const {user_id,log_type,location } = req.body;
-
-    // Member modeli kullanarak yeni bir üye oluştur
-    const newLogs = await Logs.create({
-      user_id,
-      log_type,
-      location,
-    });
-
-    // Üye başarıyla oluşturulduğunda bir yanıt gönder
-    res.status(201).json(newLogs);
-  } catch (error) {
-    // Hata durumunda bir hata yanıtı gönder
-    console.error(error);
-    res.status(500).json({ error: 'Üye oluşturulamadı' });
-  }
-};
-
-module.exports = { Logs, createLogs };
+module.exports = { Logs };
 

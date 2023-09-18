@@ -13,8 +13,8 @@ router.put('/update-member/:user_id', memberController.updateMember);
 router.delete('/delete-member/:user_id', memberController.deleteMember);
 
 
-const createLogs = require('../models/logsModel');
-router.post('/create-logs', createLogs.createLogs);
+//const createLogs = require('../models/logsModel');
+//router.post('/create-logs', createLogs.createLogs);
 
 //sırf deneme yorumu
 
