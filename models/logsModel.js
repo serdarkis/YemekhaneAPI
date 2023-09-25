@@ -25,8 +25,8 @@ const Logs = sequelize.define('logs', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  balance_changed: {
-    type: DataTypes.STRING,
+  amount_changed: {
+    type: DataTypes.INTEGER,
     allowNull: false
   },
 }, { sequelize, modelName: 'logs' });

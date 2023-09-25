@@ -8,19 +8,20 @@ const Member = sequelize.define('member', {
     primaryKey: true,
     allowNull: false
   },
-  firstName: {
+  firstname: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  lastName: {
+  lastname: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  balance: {
+  //Son değişen amountu tutar ve bütçeyi kontrol etmek için kullanılır.
+  lcAmount: {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-}, { sequelize, modelName: 'member' });
+}, { sequelize, modelName: 'member',timestamps: false, });
 
 sequelize.sync();
 
