@@ -1,13 +1,19 @@
 // routes/index.js
+
 const express = require('express');
 const router = express.Router();
 
-const UserBalanceView = require('../models/UserBalanceView');
-//Balance için frontende yansıtılan view
-UserBalanceView.createView();
+const userBalanceController = require('../controllers/userBalanceController');
+router.get('/get-balanceTable', userBalanceController.getAllBalances);
+
+
+const logsController = require('../controllers/logsController');
+//Logs tablosunu yansıtma fonksiyonu
+router.get('/get-logstable',logsController.getAllLogs);
 
 
 const memberController = require('../controllers/memberController');
+
 //member oluşturma route
 router.post('/create-member', memberController.createMember);
 //member read route
