@@ -1,33 +1,19 @@
-// controllers/logsController.js
-const logsModel = require('../models/logsModel.js');
-
-/**
-       * CREATE (MEMBER)
-       * READ (PARAMETER)
-       * UPDATE (PARAMETER, MEMBER)
-       * DELETE (MEMBER)
-       */      
-
-/**
- * Github da main branch yaninda
- * develop branch i oluştur
- * yapılanları oraya once commit sonra merge
- * merge lemede kullanılan tag leri öğren 
- * RFR, BUGFIX, DRAFT, FEATURE vs.
- */
+const { Logs } = require('../models/logsModel.js');
 
 const logsController = {
-    async createLogs(req, res) {
-        console.log(req.body);
-        const {log_id, location, time,log_type} = req.body;
 
-        try {
-            const newLogs = await logsModel.addLogs(log_id, location, time,log_type);
-            res.json(newLogs);
-        } catch (error) {
-            res.status(500).json({ error: 'An error occurred' });
-        }
-    },
+  getAllLogs: async (req, res) => {
+    try {
+      const logs = await Logs.findAll({
+        order: [
+          ['log_id', 'DESC']  // Order by log_id in descending order
+        ]
+      });
+      res.json(logs);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 };
 
-module.exports = logsController;
+module.exports = logsController ;
